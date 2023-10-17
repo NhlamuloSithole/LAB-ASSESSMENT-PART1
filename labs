@@ -1,0 +1,73 @@
+#!/bin/bash
+
+echo "*************************"
+
+# Step 1: Install NGINX
+if ! command -v nginx &> /dev/null; then
+    echo "NGINX is not installed"
+    exit 1
+fi
+
+echo "NGINX is active"
+
+echo "*************************"
+sleep 1
+
+# Step 2: Create a directory called labs under /var/www/html
+dir="labs"
+if [ ! -d "/var/www/html/$dir" ]; then
+    echo "Creating directory $dir..."
+    mkdir /var/www/html/$dir
+fi
+
+echo "*************************"
+echo "Directory created"
+echo "*************************"
+sleep 1
+
+# Step 3: Change ownership of labs to the current user
+echo "Changing ownership..."
+chown $USER:root /var/www/html/$dir
+
+echo "*************************"
+echo "Ownership changed"
+echo "*************************"
+
+# Step 4: Create a symbolic link (html) under the home directory of the current user, and point it to labs
+link="html"
+if [ ! -d "~/html" ]; then
+    echo "Creating symbolic link $link..."
+    ln -s /var/www/html/$dir ~/html
+fi
+
+echo "*************************"
+echo "Symbolic link created"
+echo "*************************"
+sleep 1
+
+# Step 5: Create an index.html file under html
+page="index.html"
+html_dir="$HOME/html"
+if [ ! -f "$html_dir/$page" ]; then
+    echo "Creating $page..."
+    echo "<h1>Welcome to my webpage!</h1>" > "$html_dir/$page"
+fi
+
+# Step 6: Add your info to the page
+echo "Adding information to the page..."
+
+echo "*************************"
+echo "Test page content:"
+cat "$html_dir/$page"
+echo "*************************"
+
+sleep 1
+
+# Step 7: Test the page in the browser
+echo "Testing the page in the browser..."
+systemctl restart nginx
+
+echo "*************************"
+echo "NGINX restart complete"
+echo "*************************"
+
