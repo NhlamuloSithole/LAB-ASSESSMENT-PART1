@@ -1,0 +1,38 @@
+#!/bin/bash
+
+# Task 4: Creating Student Table and Data
+echo "Task 4: Creating Student Table and Data"
+
+# Database and Table Names
+dbname="student_records"
+tablename="students"
+
+# MySQL Database and Table Creation SQL Statements
+create_db_sql="CREATE DATABASE IF NOT EXISTS $dbname;"
+use_db_sql="USE $dbname;"
+create_table_sql="CREATE TABLE IF NOT EXISTS $tablename (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(255) NOT NULL,
+    age INT NOT NULL,
+    gender VARCHAR(10) NOT NULL,
+    course VARCHAR(255) NOT NULL
+);"
+insert_data_sql="INSERT INTO $tablename (name, age, gender, course) VALUES 
+    ('John Doe', 20, 'Male', 'Computer Science'),
+    ('Jane Smith', 22, 'Female', 'Mathematics'),
+    ('Michael Johnson', 21, 'Male', 'Engineering');"
+
+# Execute SQL Statements using MySQL Client
+mysql -u root -p -e "$create_db_sql"
+mysql -u root -p -e "$use_db_sql"
+mysql -u root -p -e "$create_table_sql"
+mysql -u root -p -e "$insert_data_sql"
+
+# Check if Table and Data are Created Successfully
+check_table_sql="SELECT COUNT(*) FROM $tablename;"
+num_rows=$(mysql -u root -p -e "$check_table_sql" --skip-column-names --raw)
+if [ "$num_rows" -eq 3 ]; then
+    echo "Student Table and Data Created Successfully."
+else
+    echo "Error: Student Table and Data Creation Failed."
+fi
