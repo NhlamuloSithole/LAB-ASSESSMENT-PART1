@@ -1,0 +1,30 @@
+task 6
+from flask import Flask, render_template
+import mysql.connector
+
+app = Flask(__name__)
+
+# Establishing a connection to the database server
+db_connection = mysql.connector.connect(
+    host="localhost",
+    user="username",  # replace with your MySQL username
+    password="password",  # replace with your MySQL password
+    database="studentsManagement"
+)
+
+# Creating a cursor object using the cursor() method
+cursor = db_connection.cursor()
+
+@app.route('/')
+def index():
+    # Fetching student data from the database
+    cursor.execute("SELECT * FROM studentInfo")
+    students = cursor.fetchall()
+    
+    # Closing the database connection
+    db_connection.close()
+    
+    return render_template('index.html', students=students)
+
+if __name__ == '__main__':
+    app.run(debug=True)
