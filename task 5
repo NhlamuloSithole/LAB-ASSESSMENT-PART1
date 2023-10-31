@@ -1,0 +1,35 @@
+task 5
+import mysql.connector
+
+# Establishing a connection to the database server
+db_connection = mysql.connector.connect(
+    host="localhost",
+    user="username",  # replace with your MySQL username
+    password="password",  # replace with your MySQL password
+    database="studentsManagement"
+)
+
+# Creating a cursor object using the cursor() method
+cursor = db_connection.cursor()
+
+# Creating the studentInfo table
+cursor.execute("CREATE TABLE studentInfo (id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(255), age INT, grade VARCHAR(10))")
+
+# Inserting student data into the table
+student_data = [
+    ("Alice", 20, "A"),
+    ("Bob", 22, "B"),
+    ("Charlie", 21, "C"),
+    # Add more student data as needed
+]
+
+# Inserting data into the table
+cursor.executemany("INSERT INTO studentInfo (name, age, grade) VALUES (%s, %s, %s)", student_data)
+
+# Committing the changes
+db_connection.commit()
+
+# Closing the database connection
+db_connection.close()
+
+print("Database connection and student data insertion successful.")
